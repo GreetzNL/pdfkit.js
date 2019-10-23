@@ -117,7 +117,7 @@
         },
         _doOverPrint: function(overPrintStroke, overPrintFill) {
             var dictionary, id, key, name, ref1;
-            key = fillOpacity + "_" + strokeOpacity;
+            key = overPrintStroke + "_" + overPrintFill;
             if (this._overprintRegistry[key]) {
                 ref1 = this._overprintRegistry[key], dictionary = ref1[0], name = ref1[1];
             } else {
