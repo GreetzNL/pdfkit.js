@@ -137,7 +137,7 @@
                 dictionary = this.ref(dictionary);
                 dictionary.end();
                 id = ++this._gsCount;
-                name = "Gs" + id;
+                name = "GS" + id;
                 this._overprintRegistry[key] = [dictionary, name];
                 this.page.ext_gstates[name] = dictionary;
                 return this.addContent("/" + name + " gs");
