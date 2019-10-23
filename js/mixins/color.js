@@ -9,7 +9,8 @@
         spotColorsCount: 0,
         initColor: function() {
             this._opacityRegistry = {};
-            this._opacityCount = 0;
+            this._overprintRegistry = {};
+            this._gsCount = 0;
             return this._gradCount = 0;
         },
         _normalizeColor: function(color) {
@@ -60,6 +61,7 @@
             var op, space;
             color = this._normalizeColor(color);
             if (!color) {
+                this._doOverPrint(false, false);
                 return false;
             }
             op = stroke ? 'SCN' : 'scn';
@@ -68,6 +70,7 @@
                 color.apply(op);
             } else if (typeof color === 'string') {
                 this.addContent(`/CS${this.spotColors[color].index} ${stroke ? 'CS' : 'cs'} 1 ${op}`);
+                this._doOverPrint(true, true);
                 return false;
             } else {
                 space = color.length === 4 ? 'DeviceCMYK' : 'DeviceRGB';
@@ -75,6 +78,7 @@
                 color = color.join(' ');
                 this.addContent(color + " " + op);
             }
+            this._doOverPrint(false, false);
             return true;
         },
         _setColorSpace: function(space, stroke) {
@@ -111,6 +115,34 @@
             this._doOpacity(null, opacity);
             return this;
         },
+        _doOverPrint: function(overPrintStroke, overPrintFill) {
+            var dictionary, id, key, name, ref1;
+            key = fillOpacity + "_" + strokeOpacity;
+            if (this._overprintRegistry[key]) {
+                ref1 = this._overprintRegistry[key], dictionary = ref1[0], name = ref1[1];
+            } else {
+                dictionary = {
+                    Type: 'ExtGState'
+                };
+                dictionary.AIS = false;
+                dictionary.BM = '/Normal';
+                dictionary.ca = 1;
+                dictionary.CA = 1;
+                dictionary.op = overPrintFill || overPrintStroke; //TODO make this correct
+                dictionary.OP = overPrintFill || overPrintStroke; //TODO make this correct
+                dictionary.OPM = 1;
+                dictionary.SA = true;
+                dictionary.SMask = '/None';
+                dictionary.Type = '/ExtGState';
+                dictionary = this.ref(dictionary);
+                dictionary.end();
+                id = ++this._gsCount;
+                name = "Gs" + id;
+                this._overprintRegistry[key] = [dictionary, name];
+                this.page.ext_gstates[name] = dictionary;
+                return this.addContent("/" + name + " gs");
+            }
+        },
         _doOpacity: function(fillOpacity, strokeOpacity) {
             var dictionary, id, key, name, ref1;
             if (!((fillOpacity != null) || (strokeOpacity != null))) {
@@ -137,7 +169,7 @@
                 }
                 dictionary = this.ref(dictionary);
                 dictionary.end();
-                id = ++this._opacityCount;
+                id = ++this._gsCount;
                 name = "Gs" + id;
                 this._opacityRegistry[key] = [dictionary, name];
             }
