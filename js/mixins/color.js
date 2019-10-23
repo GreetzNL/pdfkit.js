@@ -61,7 +61,6 @@
             var op, space;
             color = this._normalizeColor(color);
             if (!color) {
-                this._doOverPrint(false, false);
                 return false;
             }
             op = stroke ? 'SCN' : 'scn';
