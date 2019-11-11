@@ -8,6 +8,8 @@
         spotColors: {},
         spotColorsCount: 0,
         initColor: function() {
+            this.spotColors = {};
+            this.spotColorsCount = 0;
             this._opacityRegistry = {};
             this._overprintRegistry = {};
             this._gsCount = 0;
