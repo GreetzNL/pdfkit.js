@@ -196,7 +196,7 @@
                 values: [C, M, Y, K],
             };
             if (!this.hasOverprintGState) {
-                const ref = doc.ref({
+                const ref = this.ref({
                 'CA':'1',
                 'OP': 'true',
                 'SMask':'/None',
@@ -215,7 +215,7 @@
                 this.hasOverprintGState = true;
                 this.page.ext_gstates[gsname] = ref;
             }
-            this.addContent(`/${doc.overprintGStateName} gs`);
+            this.addContent(`/${this.overprintGStateName} gs`);
         },
         _putSpotColors: function() {
             for (var item in this.spotColors) {
