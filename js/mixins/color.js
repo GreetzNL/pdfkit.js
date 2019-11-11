@@ -74,6 +74,7 @@
                 this._setColorSpace('Pattern', stroke);
                 color.apply(op);
             } else if (typeof color === 'string') {
+                this.addContent(`/${this.overprintGStateName} gs`);
                 this.addContent(`/CS${this.spotColors[color].index} ${stroke ? 'CS' : 'cs'} 1 ${op}`);
                 this._doOverPrint(true, true);
                 return false;
@@ -215,7 +216,6 @@
                 this.hasOverprintGState = true;
                 this.page.ext_gstates[gsname] = ref;
             }
-            this.addContent(`/${this.overprintGStateName} gs`);
         },
         _putSpotColors: function() {
             for (var item in this.spotColors) {
