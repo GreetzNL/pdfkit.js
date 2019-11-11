@@ -7,9 +7,11 @@
     module.exports = {
         spotColors: {},
         spotColorsCount: 0,
+        hasOverprintGState: false,
         initColor: function() {
             this.spotColors = {};
             this.spotColorsCount = 0;
+            this.hasOverprintGState = false;
             this._opacityRegistry = {};
             this._overprintRegistry = {};
             this._gsCount = 0;
@@ -192,6 +194,25 @@
                 name: name,
                 values: [C, M, Y, K],
             };
+            if (!this.hasOverprintGState) {
+                const ref = doc.ref({
+                'CA':'1',
+                'OP': 'true',
+                'SMask':'/None',
+                '/SA': 'true',
+                '/ca': '1',
+                '/op': 'true',
+                '/OPM': '1',
+                '/AIS': 'false',
+                '/BM': '/Normal',
+                '/Type': '/ExtGState'
+                });
+                ref.end(undefined);
+                const gsid = Object.keys(this.page.ext_gstates).length;
+                const gsname = `Gs${gsid}`;
+                this.hasOverprintGState = true;
+                this.page.ext_gstates[gsname] = ref;
+            }
         },
         _putSpotColors: function() {
             for (var item in this.spotColors) {
