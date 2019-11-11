@@ -55,6 +55,7 @@
                 }
                 return color;
             } else if (this.spotColors[color]) {
+                console.log('(Re) using spot color', this.spotColors[color], 'for color', color);
                 return color;
             }
             return null;
