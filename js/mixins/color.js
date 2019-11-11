@@ -8,10 +8,11 @@
         spotColors: {},
         spotColorsCount: 0,
         hasOverprintGState: false,
+        overprintGStateName: '',
         initColor: function() {
+            this.overprintGStateName = '';
             this.spotColors = {};
             this.spotColorsCount = 0;
-            this.hasOverprintGState = false;
             this._opacityRegistry = {};
             this._overprintRegistry = {};
             this._gsCount = 0;
@@ -210,9 +211,11 @@
                 ref.end(undefined);
                 const gsid = Object.keys(this.page.ext_gstates).length;
                 const gsname = `Gs${gsid}`;
+                this.overprintGStateName = gsname;
                 this.hasOverprintGState = true;
                 this.page.ext_gstates[gsname] = ref;
             }
+            this.addContent(`/${doc.overprintGStateName} gs`);
         },
         _putSpotColors: function() {
             for (var item in this.spotColors) {
